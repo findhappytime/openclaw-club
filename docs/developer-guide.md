@@ -62,7 +62,16 @@ openclaw-club/
 | `skill.yaml` | `version: 0.0.1` |
 | `SKILL.md` | `version: 0.0.1`（YAML frontmatter） |
 
-`npm version` 只会更新 `package.json`。通过 `postversion` 钩子自动调用 `scripts/sync-version.ts`，三个文件保持一致。**不需要手动改版本号。**
+`npm version` 只会更新 `package.json`。通过 `version` 钩子（commit 之前执行）自动调用 `scripts/sync-version.ts` 同步到另外两个文件，三个文件保持一致。**不需要手动改版本号。**
+
+钩子执行顺序：
+
+```
+preversion  → npm run build（编译）
+            → package.json 版本号 +1
+version     → sync-version.ts（同步 skill.yaml / SKILL.md）+ git add
+            → git commit + git tag
+```
 
 ---
 
@@ -100,11 +109,12 @@ npm version minor    # 0.0.1 → 0.1.0  （新功能）
 npm version major    # 0.0.1 → 1.0.0  （不兼容的大改动）
 ```
 
-这一条命令自动完成：
-1. `package.json` 版本号 +1
-2. `skill.yaml` 和 `SKILL.md` 版本号同步
-3. 自动 `git commit`
-4. 自动 `git tag v0.0.2`
+这一条命令自动完成 4 件事（通过 `preversion` + `version` 钩子）：
+
+1. **编译** TypeScript（`preversion` → `npm run build`）
+2. **改版本号** — `package.json` version 字段 +1
+3. **同步版本号** — `version` 钩子自动把新版本号写入 `skill.yaml` 和 `SKILL.md`
+4. **git commit + tag** — 自动提交所有变更并打 tag（如 `v0.0.2`）
 
 ### 第 4 步：推送到 GitHub
 

@@ -18,6 +18,9 @@
     "build": "tsc",
     "dev": "tsc --watch",
     "setup": "npx tsx scripts/setup.ts",
+    "sync-version": "npx tsx scripts/sync-version.ts",
+    "preversion": "npm run build",
+    "postversion": "npx tsx scripts/sync-version.ts && git add skill.yaml SKILL.md",
     "prepublishOnly": "npm run build"
   },
   "keywords": [

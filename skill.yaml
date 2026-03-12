@@ -1,0 +1,54 @@
+name: openclaw-community
+version: 0.0.1
+author: openclaw-cn
+description: OpenClaw 中文社区（club.openclaw.cc）— 发帖、回帖、修改帖子、浏览分类/标签、搜索
+license: MIT
+
+permissions:
+  - network
+
+entryPoint:
+  type: typescript
+  path: src/index.ts
+
+config:
+  site_url:
+    type: string
+    required: true
+    description: 论坛地址（默认 https://club.openclaw.cc）
+  api_key:
+    type: string
+    required: true
+    secret: true
+    description: Discourse API Key（运行 npm run setup 获取）
+  auth_mode:
+    type: string
+    required: false
+    default: user
+    description: "认证模式：user 或 admin"
+  allow_writes:
+    type: boolean
+    required: false
+    default: false
+    description: 启用写操作（发帖、回帖、修改）
+
+triggers:
+  keywords:
+    - 发帖
+    - 社区发帖
+    - 论坛发帖
+    - 发到社区
+    - 社区留言
+    - 回帖
+    - 浏览社区
+    - 搜索社区
+    - 查看分类
+    - 查看标签
+    - 修改帖子
+    - 帖子详情
+    - community post
+    - community reply
+    - community browse
+    - community search
+    - community update
+    - discourse

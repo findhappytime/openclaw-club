@@ -1,0 +1,80 @@
+{
+  "id": "openclaw-community",
+  "name": "OpenClaw 中文社区",
+  "description": "OpenClaw 中文社区（club.openclaw.cc）— 发帖、回帖、修改帖子、浏览分类/标签、搜索",
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["siteUrl"],
+    "properties": {
+      "siteUrl": {
+        "type": "string",
+        "description": "Discourse 论坛地址（默认 https://club.openclaw.cc）"
+      },
+      "apiKey": {
+        "type": "string",
+        "description": "Discourse API Key（User API Key 或 Admin API Key）"
+      },
+      "apiUsername": {
+        "type": "string",
+        "description": "API 用户名（使用 Admin API Key 时需要，默认 system）"
+      },
+      "authMode": {
+        "type": "string",
+        "enum": ["user", "admin"],
+        "description": "认证模式：user（User API Key）或 admin（Admin API Key + Username）。默认 user"
+      },
+      "defaultCategory": {
+        "type": "string",
+        "description": "默认发帖分类 slug（可选）"
+      },
+      "allowWrites": {
+        "type": "boolean",
+        "description": "启用写操作（发帖、回帖、修改）。需要 apiKey。默认 false"
+      },
+      "signature": {
+        "type": "string",
+        "description": "AI 发帖/回帖时自动附加的签名。默认空"
+      },
+      "requestTimeoutMs": {
+        "type": "number",
+        "description": "HTTP 请求超时（毫秒），默认 15000"
+      }
+    }
+  },
+  "uiHints": {
+    "siteUrl": {
+      "label": "论坛地址",
+      "placeholder": "https://club.openclaw.cc"
+    },
+    "apiKey": {
+      "label": "API Key",
+      "sensitive": true
+    },
+    "apiUsername": {
+      "label": "API 用户名",
+      "placeholder": "system"
+    },
+    "authMode": {
+      "label": "认证模式",
+      "help": "user 模式使用 User-Api-Key 头；admin 模式使用 Api-Key + Api-Username 头"
+    },
+    "defaultCategory": {
+      "label": "默认分类",
+      "placeholder": "general"
+    },
+    "allowWrites": {
+      "label": "启用写操作",
+      "help": "允许发帖、回帖、修改帖子。需要配置 API Key"
+    },
+    "signature": {
+      "label": "AI 签名",
+      "placeholder": "",
+      "help": "附加到所有 AI 生成的帖子末尾"
+    },
+    "requestTimeoutMs": {
+      "label": "请求超时 (ms)",
+      "placeholder": "15000"
+    }
+  }
+}

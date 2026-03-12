@@ -1,0 +1,36 @@
+{
+  "name": "openclaw-community",
+  "version": "0.0.1",
+  "description": "OpenClaw 中文社区（club.openclaw.cc）— 发帖、回帖、修改、浏览、搜索",
+  "author": "openclaw-cn",
+  "license": "MIT",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "SKILL.md",
+    "skill.yaml",
+    "openclaw.plugin.json",
+    "scripts"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "setup": "npx tsx scripts/setup.ts",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "openclaw",
+    "clawhub",
+    "discourse",
+    "forum",
+    "community"
+  ],
+  "devDependencies": {
+    "typescript": "^5.4.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

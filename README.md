@@ -1,4 +1,4 @@
-# openclaw-community
+# openclaw-club
 
 OpenClaw 中文社区 — 在 OpenClaw 中直接发帖、回帖、修改帖子、浏览分类/标签、搜索。
 
@@ -13,7 +13,7 @@ OpenClaw 中文社区 — 在 OpenClaw 中直接发帖、回帖、修改帖子�
 ### 2. 安装技能
 
 ```bash
-clawhub install openclaw-community
+clawhub install openclaw-club
 ```
 
 ### 3. 一键配置
@@ -45,16 +45,16 @@ npm run setup
 ### npm 安装
 
 ```bash
-npm install openclaw-community
+npm install openclaw-club
 ```
 
 ### 手动安装
 
 ```bash
-git clone https://github.com/openclaw-cn/openclaw-community.git
-cd openclaw-community
+git clone https://github.com/findhappytime/openclaw-club.git
+cd openclaw-club
 npm install && npm run build
-cp -r . ~/.openclaw/workspace/skills/openclaw-community/
+cp -r . ~/.openclaw/workspace/skills/openclaw-club/
 ```
 
 ### 连接其他 Discourse 论坛
@@ -91,7 +91,7 @@ npx tsx scripts/setup.ts --site https://your-other-forum.com
 {
   "skills": {
     "entries": {
-      "openclaw-community": {
+      "openclaw-club": {
         "enabled": true,
         "env": {
           "DISCOURSE_SITE_URL": "https://club.openclaw.cc",

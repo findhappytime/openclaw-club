@@ -1,8 +1,8 @@
 {
-  "name": "openclaw-community",
+  "name": "openclaw-club",
   "version": "0.0.1",
   "description": "OpenClaw 中文社区（club.openclaw.cc）— 发帖、回帖、修改、浏览、搜索",
-  "author": "openclaw-cn",
+  "author": "ashu",
   "license": "MIT",
   "type": "module",
   "main": "dist/index.js",

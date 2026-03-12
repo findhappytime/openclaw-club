@@ -74,7 +74,7 @@ function patchConfig(siteUrl: string, apiKey: string) {
   const skills = (config.skills ?? {}) as Record<string, unknown>;
   const entries = (skills.entries ?? {}) as Record<string, unknown>;
 
-  entries["openclaw-community"] = {
+  entries["openclaw-club"] = {
     enabled: true,
     env: {
       DISCOURSE_SITE_URL: siteUrl,

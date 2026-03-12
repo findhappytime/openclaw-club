@@ -1,7 +1,7 @@
 ---
-name: openclaw-community
+name: openclaw-club
 version: 0.0.1
-author: openclaw-cn
+author: ashu
 description: OpenClaw 中文社区（club.openclaw.cc）— 发帖、回帖、修改帖子、浏览分类/标签、搜索
 tags:
   - discourse

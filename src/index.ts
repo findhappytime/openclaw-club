@@ -14,7 +14,17 @@ export default function register(
   api: PluginApi,
   rawConfig?: Record<string, unknown> | null,
 ) {
+  console.log("[openclaw-club] Incoming rawConfig:", rawConfig === undefined ? "undefined" : rawConfig === null ? "null" : JSON.stringify(Object.keys(rawConfig)));
+
   const cfg = resolveConfig(rawConfig);
+
+  console.log("[openclaw-club] Resolved config:", JSON.stringify({
+    siteUrl: cfg.siteUrl,
+    hasApiKey: !!cfg.apiKey,
+    authMode: cfg.authMode,
+    allowWrites: cfg.allowWrites,
+  }));
+
   const client = new DiscourseClient(cfg);
 
   registerGetCategories(api, client, cfg);
@@ -24,9 +34,12 @@ export default function register(
   registerSearch(api, client, cfg);
 
   if (cfg.allowWrites && cfg.apiKey) {
+    console.log("[openclaw-club] REGISTERING WRITE TOOLS (create-topic, create-post, update-topic)");
     registerCreateTopic(api, client, cfg);
     registerCreatePost(api, client, cfg);
     registerUpdateTopic(api, client, cfg);
+  } else {
+    console.log("[openclaw-club] Write tools DISABLED — allowWrites:", cfg.allowWrites, "hasApiKey:", !!cfg.apiKey);
   }
 }
 

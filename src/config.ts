@@ -77,10 +77,10 @@ export function resolveConfig(
   const defaultCategory =
     pick(r, "defaultCategory", "default_category") ?? undefined;
 
-  const allowWritesRaw = pick(r, "allowWrites", "allow_writes");
+  const awRaw = r.allowWrites ?? r.allow_writes;
   const allowWrites =
-    allowWritesRaw !== undefined
-      ? allowWritesRaw === "true" || allowWritesRaw === "1"
+    awRaw !== undefined && awRaw !== null
+      ? awRaw === true || awRaw === "true" || awRaw === "1" || awRaw === 1
       : !!apiKey;
 
   const signature = pick(r, "signature") ?? "";

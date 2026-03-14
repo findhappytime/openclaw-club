@@ -31,18 +31,71 @@ export interface PluginApi {
 
 const DEFAULT_SITE_URL = "https://club.openclaw.cc";
 
-export function resolveConfig(raw: Record<string, unknown> | undefined): CommunityConfig {
-  const data = raw || {};
-  const siteUrl = String(data.siteUrl || data.site_url || DEFAULT_SITE_URL).replace(/\/+$/, "");
+function pick(
+  raw: Record<string, unknown>,
+  ...keys: string[]
+): string | undefined {
+  for (const k of keys) {
+    const v = raw[k];
+    if (v !== undefined && v !== null && v !== "") return String(v);
+  }
+  return undefined;
+}
+
+function envStr(...names: string[]): string | undefined {
+  for (const n of names) {
+    const v = typeof process !== "undefined" ? process.env[n] : undefined;
+    if (v) return v;
+  }
+  return undefined;
+}
+
+export function resolveConfig(
+  raw?: Record<string, unknown> | null,
+): CommunityConfig {
+  const r: Record<string, unknown> = raw && typeof raw === "object" ? raw : {};
+
+  const siteUrl = (
+    pick(r, "siteUrl", "site_url", "siteurl") ??
+    envStr("DISCOURSE_SITE_URL", "SITE_URL") ??
+    DEFAULT_SITE_URL
+  ).replace(/\/+$/, "");
+
+  const apiKey =
+    pick(r, "apiKey", "api_key", "apikey") ??
+    envStr("DISCOURSE_API_KEY", "API_KEY");
+
+  const apiUsername =
+    pick(r, "apiUsername", "api_username") ??
+    envStr("DISCOURSE_API_USERNAME") ??
+    "system";
+
+  const authModeRaw =
+    pick(r, "authMode", "auth_mode") ?? envStr("DISCOURSE_AUTH_MODE");
+  const authMode: "user" | "admin" = authModeRaw === "admin" ? "admin" : "user";
+
+  const defaultCategory =
+    pick(r, "defaultCategory", "default_category") ?? undefined;
+
+  const allowWritesRaw = pick(r, "allowWrites", "allow_writes");
+  const allowWrites =
+    allowWritesRaw !== undefined
+      ? allowWritesRaw === "true" || allowWritesRaw === "1"
+      : !!apiKey;
+
+  const signature = pick(r, "signature") ?? "";
+
+  const timeoutRaw = pick(r, "requestTimeoutMs", "request_timeout_ms");
+  const requestTimeoutMs = timeoutRaw ? Number(timeoutRaw) : 15000;
 
   return {
     siteUrl,
-    apiKey: data.apiKey ? String(data.apiKey) : (data.api_key ? String(data.api_key) : undefined),
-    apiUsername: data.apiUsername ? String(data.apiUsername) : (data.api_username ? String(data.api_username) : "system"),
-    authMode: (data.authMode === "admin" || data.auth_mode === "admin") ? "admin" : "user",
-    defaultCategory: data.defaultCategory ? String(data.defaultCategory) : (data.default_category ? String(data.default_category) : undefined),
-    allowWrites: Boolean(data.allowWrites ?? data.allow_writes ?? false),
-    signature: data.signature ? String(data.signature) : "",
-    requestTimeoutMs: Number(data.requestTimeoutMs ?? data.request_timeout_ms ?? 15000),
+    apiKey,
+    apiUsername,
+    authMode,
+    defaultCategory,
+    allowWrites,
+    signature,
+    requestTimeoutMs,
   };
 }

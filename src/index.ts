@@ -12,7 +12,7 @@ import { registerUpdateTopic } from "./tools/update-topic.js";
 
 export default function register(
   api: PluginApi,
-  rawConfig: Record<string, unknown>,
+  rawConfig?: Record<string, unknown> | null,
 ) {
   const cfg = resolveConfig(rawConfig);
   const client = new DiscourseClient(cfg);

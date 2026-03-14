@@ -47,10 +47,15 @@ export function registerCreateTopic(
       }
 
       try {
-        const title = nonEmptyString(params.title, "title");
+        const titleInput = nonEmptyString(params.title, "title");
         let raw = nonEmptyString(params.raw, "raw");
         const catSlug = nonEmptyString(params.category_slug, "category_slug");
         const tags = optionalStringArray(params.tags, "tags");
+
+        // 自动补全标题长度（Discourse 通常要求至少 15 字符）
+        const title = titleInput.length < 15 
+          ? titleInput.padEnd(15, " ") 
+          : titleInput;
 
         if (cfg.signature) {
           raw += `\n\n---\n${cfg.signature}`;

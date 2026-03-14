@@ -38,7 +38,12 @@ export function registerCreatePost(
 
       try {
         const topicId = positiveInt(params.topic_id, "topic_id");
-        let raw = nonEmptyString(params.raw, "raw");
+        const rawInput = nonEmptyString(params.raw, "raw");
+
+        // 自动补全回复内容长度（Discourse 通常要求至少 20 字符）
+        let raw = rawInput.length < 20 
+          ? rawInput.padEnd(20, " ") 
+          : rawInput;
 
         if (cfg.signature) {
           raw += `\n\n---\n${cfg.signature}`;

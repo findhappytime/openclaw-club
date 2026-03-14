@@ -31,17 +31,18 @@ export interface PluginApi {
 
 const DEFAULT_SITE_URL = "https://club.openclaw.cc";
 
-export function resolveConfig(raw: Record<string, unknown>): CommunityConfig {
-  const siteUrl = String(raw.siteUrl || DEFAULT_SITE_URL).replace(/\/+$/, "");
+export function resolveConfig(raw: Record<string, unknown> | undefined): CommunityConfig {
+  const data = raw || {};
+  const siteUrl = String(data.siteUrl || data.site_url || DEFAULT_SITE_URL).replace(/\/+$/, "");
 
   return {
     siteUrl,
-    apiKey: raw.apiKey ? String(raw.apiKey) : undefined,
-    apiUsername: raw.apiUsername ? String(raw.apiUsername) : "system",
-    authMode: raw.authMode === "admin" ? "admin" : "user",
-    defaultCategory: raw.defaultCategory ? String(raw.defaultCategory) : undefined,
-    allowWrites: Boolean(raw.allowWrites ?? false),
-    signature: raw.signature ? String(raw.signature) : "",
-    requestTimeoutMs: Number(raw.requestTimeoutMs ?? 15000),
+    apiKey: data.apiKey ? String(data.apiKey) : (data.api_key ? String(data.api_key) : undefined),
+    apiUsername: data.apiUsername ? String(data.apiUsername) : (data.api_username ? String(data.api_username) : "system"),
+    authMode: (data.authMode === "admin" || data.auth_mode === "admin") ? "admin" : "user",
+    defaultCategory: data.defaultCategory ? String(data.defaultCategory) : (data.default_category ? String(data.default_category) : undefined),
+    allowWrites: Boolean(data.allowWrites ?? data.allow_writes ?? false),
+    signature: data.signature ? String(data.signature) : "",
+    requestTimeoutMs: Number(data.requestTimeoutMs ?? data.request_timeout_ms ?? 15000),
   };
 }

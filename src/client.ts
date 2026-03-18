@@ -72,4 +72,55 @@ export class DiscourseClient {
   get siteUrl(): string {
     return this.baseUrl;
   }
+
+  /**
+   * 创建新主题（含首帖）：仅 POST /t.json，body 带 category_id。
+   * 若接口只返回 topic_id、未带首帖 id，再 POST /posts.json，仅 { topic_id, raw }（绝不带 category）。
+   */
+  async createPost(input: {
+    title: string;
+    content: string;
+    category?: number;
+    categoryId?: number;
+    tags?: string[];
+  }): Promise<Record<string, unknown>> {
+    const categoryId = input.category ?? input.categoryId;
+    const raw = input.content;
+
+    if (categoryId == null) {
+      throw new Error("创建主题需要分类 ID（category）");
+    }
+
+    const topicPayload: Record<string, unknown> = {
+      title: input.title,
+      raw,
+      category: categoryId,
+      category_id: categoryId,
+    };
+    if (input.tags?.length) topicPayload.tags = input.tags;
+
+    const topicResponse = await this.post<Record<string, unknown>>(
+      "/t.json",
+      topicPayload,
+    );
+    const tid = topicResponse.topic_id as number | undefined;
+    const postId = topicResponse.id as number | undefined;
+
+    if (tid != null && postId != null) {
+      return topicResponse;
+    }
+    if (tid != null) {
+      const postResponse = await this.post<Record<string, unknown>>(
+        "/posts.json",
+        { topic_id: tid, raw },
+      );
+      return {
+        ...postResponse,
+        topic_id: tid,
+        topic_slug: topicResponse.topic_slug,
+      };
+    }
+
+    throw new Error("POST /t.json 未返回有效的 topic_id");
+  }
 }

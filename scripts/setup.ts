@@ -76,9 +76,11 @@ function patchConfig(siteUrl: string, apiKey: string) {
 
   entries["openclaw-club"] = {
     enabled: true,
+    allowWrites: true,
     env: {
       DISCOURSE_SITE_URL: siteUrl,
       DISCOURSE_API_KEY: apiKey,
+      DISCOURSE_ALLOW_WRITES: "true",
     },
   };
 

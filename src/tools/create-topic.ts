@@ -81,25 +81,32 @@ export function registerCreateTopic(
           );
         }
 
-        const body: Record<string, unknown> = {
+        const data = await client.createPost({
           title,
-          raw,
-          category: category.id,
-        };
-        if (tags?.length) body.tags = tags;
+          content: raw,
+          categoryId: category.id as number,
+          tags: tags ?? undefined,
+        });
 
-        const data = await client.post<Record<string, unknown>>(
-          "/posts.json",
-          body,
-        );
-
+        const topicSlug = data.topic_slug ?? "topic";
+        const topicId = data.topic_id;
         return toolResult({
-          topic_id: data.topic_id,
+          topic_id: topicId,
           post_id: data.id,
-          url: `${client.siteUrl}/t/${data.topic_slug}/${data.topic_id}`,
+          url: `${client.siteUrl}/t/${topicSlug}/${topicId}`,
         });
       } catch (err) {
-        return toolError(errorMessage(err));
+        const msg = errorMessage(err);
+        if (
+          msg.includes("类别 不能为空") ||
+          msg.includes("category") ||
+          /category|分类|类别/i.test(msg)
+        ) {
+          return toolError(
+            "该论坛不支持在发帖时指定分类，请尝试发到「综合」版块后手动移动",
+          );
+        }
+        return toolError(msg);
       }
     },
   });

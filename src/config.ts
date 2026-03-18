@@ -77,11 +77,15 @@ export function resolveConfig(
   const defaultCategory =
     pick(r, "defaultCategory", "default_category") ?? undefined;
 
-  const awRaw = r.allowWrites ?? r.allow_writes;
+  const awRaw =
+    r.allowWrites ??
+    r.allow_writes ??
+    envStr("DISCOURSE_ALLOW_WRITES");
+  // 由配置或环境变量显式控制，不再因有 apiKey 就默认开启
   const allowWrites =
     awRaw !== undefined && awRaw !== null
       ? awRaw === true || awRaw === "true" || awRaw === "1" || awRaw === 1
-      : !!apiKey;
+      : false;
 
   const signature = pick(r, "signature") ?? "";
 

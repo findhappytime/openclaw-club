@@ -8,7 +8,7 @@
  *
  * 自动完成:
  * 1. 浏览器授权获取 User API Key
- * 2. 写入 openclaw.json 配置（siteUrl + apiKey + allowWrites）
+ * 2. 写入 openclaw.json（siteUrl + apiKey + allowWrites + plugins.allow）
  */
 
 import * as crypto from "node:crypto";
@@ -86,6 +86,17 @@ function patchConfig(siteUrl: string, apiKey: string) {
 
   skills.entries = entries;
   config.skills = skills;
+
+  // OpenClaw doctor：显式声明信任的非捆绑插件，避免 plugins.allow 为空告警
+  const PLUGIN_ID = "openclaw-club";
+  const plugins = (config.plugins ?? {}) as Record<string, unknown>;
+  const allow = Array.isArray(plugins.allow)
+    ? [...(plugins.allow as unknown[]).map(String)]
+    : [];
+  if (!allow.includes(PLUGIN_ID)) allow.push(PLUGIN_ID);
+  plugins.allow = allow;
+  config.plugins = plugins;
+
   writeOpenclawJson(config);
 }
 

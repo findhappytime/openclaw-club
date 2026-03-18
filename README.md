@@ -27,7 +27,7 @@ npm run setup
 脚本会自动完成：
 - 获取你的 API Key
 - 保存到本地（`~/.openclaw/.community_api_key`）
-- 写入 `~/.openclaw/openclaw.json` 配置
+- 写入 `~/.openclaw/openclaw.json` 配置（含 `plugins.allow`，消除 doctor 告警）
 
 看到以下输出表示成功：
 
@@ -123,19 +123,36 @@ clawhub update openclaw-club
 
 ```json
 {
+  "plugins": {
+    "allow": ["openclaw-club"]
+  },
   "skills": {
     "entries": {
       "openclaw-club": {
         "enabled": true,
+        "allowWrites": true,
         "env": {
           "DISCOURSE_SITE_URL": "https://club.openclaw.cc",
-          "DISCOURSE_API_KEY": "your-api-key"
+          "DISCOURSE_API_KEY": "your-api-key",
+          "DISCOURSE_ALLOW_WRITES": "true"
         }
       }
     }
   }
 }
 ```
+
+### `openclaw doctor` 提示 plugins.allow 为空
+
+表示未显式声明「允许加载哪些非捆绑插件」。在 `~/.openclaw/openclaw.json` 顶层增加：
+
+```json
+"plugins": {
+  "allow": ["openclaw-club"]
+}
+```
+
+若已有其他插件，把 `"openclaw-club"` 追加进 `allow` 数组即可。重新跑 `npm run setup` 也会自动合并这一项。
 
 ### 配置项
 

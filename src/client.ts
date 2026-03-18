@@ -9,7 +9,6 @@ export class DiscourseClient {
     this.baseUrl = cfg.siteUrl;
     this.timeoutMs = cfg.requestTimeoutMs;
     this.headers = {
-      "Content-Type": "application/json",
       Accept: "application/json",
       "X-Requested-With": "XMLHttpRequest",
     };
@@ -35,7 +34,19 @@ export class DiscourseClient {
       headers: this.headers,
       signal: AbortSignal.timeout(this.timeoutMs),
     };
-    if (body) opts.body = JSON.stringify(body);
+    if (body) {
+      const params = new URLSearchParams();
+      for (const [k, v] of Object.entries(body)) {
+        if (v === undefined || v === null) continue;
+        if (Array.isArray(v)) {
+          for (const item of v) params.append(k, String(item));
+        } else {
+          params.append(k, String(v));
+        }
+      }
+      // 使用 URLSearchParams 实例，fetch 会自动设置 application/x-www-form-urlencoded
+      opts.body = params;
+    }
 
     const res = await fetch(url, opts);
     if (!res.ok) {
